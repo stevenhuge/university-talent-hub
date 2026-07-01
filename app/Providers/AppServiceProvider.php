@@ -19,7 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (env('VERCEL')) {
+        $isVercel = env('VERCEL') || isset($_SERVER['VERCEL']) || isset($_ENV['VERCEL']) || isset($_SERVER['LAMBDA_TASK_ROOT']) || str_contains(getcwd(), '/var/task');
+
+        if ($isVercel) {
             // Set storage path to /tmp for read-only Vercel environment
             config(['view.compiled' => '/tmp/storage/framework/views']);
             

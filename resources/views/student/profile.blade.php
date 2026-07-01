@@ -114,4 +114,70 @@
         <p class="text-muted text-center py-4">No submissions found.</p>
     @endif
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('proof_file');
+        if (!fileInput) return;
+
+        const form = fileInput.form;
+        const cloudinaryCloudName = "{{ env('CLOUDINARY_CLOUD_NAME') }}";
+        // Default to 'ml_default' if not defined in .env
+        const cloudinaryUploadPreset = "{{ env('CLOUDINARY_UPLOAD_PRESET', 'ml_default') }}";
+
+        form.addEventListener('submit', async function (e) {
+            // Check if file is selected and Cloudinary is configured
+            if (fileInput.files.length > 0 && cloudinaryCloudName && cloudinaryCloudName !== 'YOUR_CLOUDINARY_CLOUD_NAME') {
+                e.preventDefault(); // Stop native submission
+                
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerText;
+                
+                // Show loading indicator
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Uploading directly to Cloudinary...';
+
+                const file = fileInput.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', cloudinaryUploadPreset);
+
+                try {
+                    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/auto/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.error?.message || 'Failed to upload to Cloudinary');
+                    }
+
+                    const data = await response.json();
+                    
+                    // Create hidden input to pass the Cloudinary URL
+                    const urlInput = document.createElement('input');
+                    urlInput.type = 'hidden';
+                    urlInput.name = 'proof_file_url';
+                    urlInput.value = data.secure_url;
+                    form.appendChild(urlInput);
+
+                    // Clear the file input value so we don't upload the binary to our Laravel server
+                    fileInput.value = '';
+
+                    // Submit the form
+                    form.submit();
+                } catch (error) {
+                    console.error('Cloudinary Client-side Error:', error);
+                    alert('Cloudinary Upload Failed: ' + error.message + '\n\nFalling back to server-side upload...');
+                    
+                    // Restore submit button and continue with normal form submission
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalText;
+                    form.submit();
+                }
+            }
+        });
+    });
+</script>
 @endsection

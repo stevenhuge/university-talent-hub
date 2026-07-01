@@ -136,11 +136,14 @@ class StudentController extends Controller
             'type' => 'required|in:skill,portfolio,certificate',
             'title' => 'required|string',
             'description' => 'nullable|string',
-            'proof_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
+            'proof_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'proof_file_url' => 'nullable|string'
         ]);
 
         $path = null;
-        if ($request->hasFile('proof_file')) {
+        if ($request->filled('proof_file_url')) {
+            $path = $request->input('proof_file_url');
+        } elseif ($request->hasFile('proof_file')) {
             if (env('CLOUDINARY_API_KEY') && env('CLOUDINARY_CLOUD_NAME')) {
                 try {
                     $path = \App\Services\CloudinaryService::upload($request->file('proof_file'));
