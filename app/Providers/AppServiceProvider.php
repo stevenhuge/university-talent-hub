@@ -19,6 +19,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        if (env('VERCEL')) {
+            // Set storage path to /tmp for read-only Vercel environment
+            config(['view.compiled' => '/tmp/storage/framework/views']);
+            
+            config(['session.files' => '/tmp/storage/framework/sessions']);
+            config(['cache.stores.file.path' => '/tmp/storage/framework/cache']);
+            
+            // Ensure directories exist in /tmp
+            if (!is_dir('/tmp/storage/framework/views')) {
+                mkdir('/tmp/storage/framework/views', 0755, true);
+            }
+            if (!is_dir('/tmp/storage/framework/sessions')) {
+                mkdir('/tmp/storage/framework/sessions', 0755, true);
+            }
+            if (!is_dir('/tmp/storage/framework/cache')) {
+                mkdir('/tmp/storage/framework/cache', 0755, true);
+            }
+        }
     }
 }

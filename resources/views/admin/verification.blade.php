@@ -21,7 +21,7 @@
                         </div>
                         
                         @if($sub->proof_file_path)
-                            <a href="{{ Storage::url($sub->proof_file_path) }}" target="_blank" class="btn btn-outline btn-sm">View Proof</a>
+                            <a href="{{ \Illuminate\Support\Str::startsWith($sub->proof_file_path, ['http://', 'https://']) ? $sub->proof_file_path : Storage::url($sub->proof_file_path) }}" target="_blank" class="btn btn-outline btn-sm">View Proof</a>
                         @else
                             <span class="text-sm text-muted italic">No proof file attached</span>
                         @endif

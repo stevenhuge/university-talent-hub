@@ -141,7 +141,15 @@ class StudentController extends Controller
 
         $path = null;
         if ($request->hasFile('proof_file')) {
-            $path = $request->file('proof_file')->store('proofs', 'public');
+            if (env('CLOUDINARY_API_KEY') && env('CLOUDINARY_CLOUD_NAME')) {
+                try {
+                    $path = \App\Services\CloudinaryService::upload($request->file('proof_file'));
+                } catch (\Exception $e) {
+                    return back()->with('error', 'Cloudinary upload failed: ' . $e->getMessage());
+                }
+            } else {
+                $path = $request->file('proof_file')->store('proofs', 'public');
+            }
         }
 
         Submission::create([
