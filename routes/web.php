@@ -44,3 +44,16 @@ Route::middleware(['auth'])->prefix('student')->name('student.')->group(function
     Route::get('/rewards', [StudentController::class, 'rewards'])->name('rewards');
     Route::post('/rewards/{reward}/claim', [StudentController::class, 'claimReward'])->name('rewards.claim');
 });
+
+// Deployment helper route to run migrations directly from browser
+Route::get('/vercel-migrate', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--force' => true,
+            '--seed' => true
+        ]);
+        return '<h3>Migration and Seeding Successful!</h3><br><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+    } catch (\Exception $e) {
+        return '<h3>Migration Failed:</h3><br>' . $e->getMessage();
+    }
+});
