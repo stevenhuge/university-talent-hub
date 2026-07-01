@@ -17,6 +17,7 @@ class AdminController extends Controller
             'verified_portfolio' => Submission::where('type', 'portfolio')->where('status', 'approved')->count(),
             'verified_skill' => Submission::where('type', 'skill')->where('status', 'approved')->count(),
             'rejected' => Submission::where('status', 'rejected')->count(),
+            'total_students' => User::where('role', 'student')->count(),
         ];
         $recentClaims = \App\Models\RewardClaim::with(['user', 'reward'])->latest()->take(5)->get();
 

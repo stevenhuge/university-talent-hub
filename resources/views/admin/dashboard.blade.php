@@ -9,6 +9,10 @@
 </div>
 
 <div class="grid grid-cols-1 md-grid-cols-4 gap-6 mb-8" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+    <a href="{{ route('admin.search') }}" class="card text-center hover-shadow" style="text-decoration: none; border: 1px solid var(--primary); background: rgba(79, 70, 229, 0.05);">
+        <h2 style="color: var(--primary);">{{ $stats['total_students'] }}</h2>
+        <p style="color: var(--primary); font-weight: 500;">Total Students</p>
+    </a>
     <a href="{{ route('admin.verification') }}" class="card text-center hover-shadow" style="text-decoration: none; border: 1px solid var(--warning); background: rgba(245, 158, 11, 0.05);">
         <h2 style="color: var(--warning);">{{ $stats['pending'] }}</h2>
         <p style="color: var(--warning); font-weight: 500;">Pending Verifications</p>

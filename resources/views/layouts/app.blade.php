@@ -52,10 +52,12 @@
             <a href="{{ route('admin.dashboard') }}" class="nav-link">Dash</a>
             <a href="{{ route('admin.search') }}" class="nav-link">Search</a>
             <a href="{{ route('admin.verification') }}" class="nav-link">Verify</a>
+            <a href="{{ route('admin.rewards') }}" class="nav-link">Rewards</a>
         @else
             <a href="{{ route('student.dashboard') }}" class="nav-link">Dash</a>
             <a href="{{ route('student.profile') }}" class="nav-link">Profile</a>
             <a href="{{ route('student.leaderboard') }}" class="nav-link">Rank</a>
+            <a href="{{ route('student.rewards') }}" class="nav-link">Rewards</a>
         @endif
     </div>
     @endauth
@@ -79,7 +81,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p class="text-muted text-sm">&copy; {{ date('Y') }} University Talent Hub. Built with Laravel.</p>
+            <p class="text-muted text-sm">&copy; {{ date('Y') }} Ridho Karunia Setiawan (awansetiawann999@students.amikom.ac.id). Built with Laravel.</p>
         </div>
     </footer>
 
